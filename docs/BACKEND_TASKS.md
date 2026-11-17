@@ -17,7 +17,7 @@ Milestones
   `server.ts` entry, scripts `dev`, `build`, `start`, `lint`, `typecheck`, `test`. Add ESLint, Prettier, Vitest.
   `GET /healthz` returns `{ "status": "ok" }`.
   AC: `npm test` passes with a healthz test using Fastify `inject`.
-- [ ] **B0.2 Config.** `src/config.ts` validates env with Zod (NODE_ENV, PORT, DATABASE_URL, JWT_SECRET,
+- [x] **B0.2 Config.** `src/config.ts` validates env with Zod (NODE_ENV, PORT, DATABASE_URL, JWT_SECRET,
   GOOGLE_CLIENT_IDS comma list, CORS_ORIGINS). Fail fast with a clear message. Add `.env.example`.
   AC: app refuses to start with a missing var. Unit test covers valid and invalid env.
 - [ ] **B0.3 Local database.** `docker-compose.yml` with Postgres 16 for dev and a separate test database.
