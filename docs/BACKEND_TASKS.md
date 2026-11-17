@@ -31,7 +31,7 @@ Milestones
   AC: tests for 404, a validation error (400), and an unexpected error (500) all match the error shape.
 - [x] **B0.6 Security baseline.** Register helmet, CORS (allowlist from env), and a global rate limit.
   AC: test shows a blocked origin and a 429 after exceeding the limit on a test route.
-- [ ] **B0.7 CI.** GitHub Actions: install, lint, typecheck, test with a Postgres service container.
+- [x] **B0.7 CI.** GitHub Actions: install, lint, typecheck, test with a Postgres service container.
   AC: workflow file exists and runs the same three commands as local.
 - [ ] **B0.8 API docs.** `@fastify/swagger` with the Zod type provider. Serve `/docs` only when NODE_ENV is not production.
   AC: `/docs` works in dev and returns 404 in production (test both).
