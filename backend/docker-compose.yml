@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: focuspods-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: focuspods
+      POSTGRES_PASSWORD: focuspods
+      POSTGRES_DB: focuspods
+    ports:
+      - '5432:5432'
+    volumes:
+      - focuspods-postgres-data:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U focuspods -d focuspods']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  focuspods-postgres-data:

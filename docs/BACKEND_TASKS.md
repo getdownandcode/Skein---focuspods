@@ -20,7 +20,7 @@ Milestones
 - [x] **B0.2 Config.** `src/config.ts` validates env with Zod (NODE_ENV, PORT, DATABASE_URL, JWT_SECRET,
   GOOGLE_CLIENT_IDS comma list, CORS_ORIGINS). Fail fast with a clear message. Add `.env.example`.
   AC: app refuses to start with a missing var. Unit test covers valid and invalid env.
-- [ ] **B0.3 Local database.** `docker-compose.yml` with Postgres 16 for dev and a separate test database.
+- [x] **B0.3 Local database.** `docker-compose.yml` with Postgres 16 for dev and a separate test database.
   npm scripts `db:up`, `db:down`. Document in a short `backend/README.md`.
   AC: `npm run db:up` starts Postgres. README explains setup in under 10 lines.
 - [ ] **B0.4 Prisma and readiness.** Add Prisma, `src/db.ts`, an initial migration, and `GET /readyz` that runs a
