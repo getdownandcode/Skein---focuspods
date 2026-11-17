@@ -13,7 +13,7 @@ Milestones
 
 ## B0 Foundation (branch: phase/B0-foundation)
 
-- [ ] **B0.1 Project skeleton.** Create `/backend` with TypeScript strict, ESM, Fastify `buildApp()` in `app.ts`,
+- [x] **B0.1 Project skeleton.** Create `/backend` with TypeScript strict, ESM, Fastify `buildApp()` in `app.ts`,
   `server.ts` entry, scripts `dev`, `build`, `start`, `lint`, `typecheck`, `test`. Add ESLint, Prettier, Vitest.
   `GET /healthz` returns `{ "status": "ok" }`.
   AC: `npm test` passes with a healthz test using Fastify `inject`.
