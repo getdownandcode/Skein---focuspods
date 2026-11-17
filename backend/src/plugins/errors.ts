@@ -1,4 +1,5 @@
 import type { FastifyError, FastifyInstance } from 'fastify';
+import { z } from 'zod';
 
 export interface ErrorResponse {
   error: {
@@ -6,6 +7,13 @@ export interface ErrorResponse {
     message: string;
   };
 }
+
+export const errorResponseSchema = z.object({
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+  }),
+});
 
 const INTERNAL_ERROR: ErrorResponse = {
   error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },

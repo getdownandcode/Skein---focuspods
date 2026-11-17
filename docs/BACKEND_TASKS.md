@@ -33,7 +33,7 @@ Milestones
   AC: test shows a blocked origin and a 429 after exceeding the limit on a test route.
 - [x] **B0.7 CI.** GitHub Actions: install, lint, typecheck, test with a Postgres service container.
   AC: workflow file exists and runs the same three commands as local.
-- [ ] **B0.8 API docs.** `@fastify/swagger` with the Zod type provider. Serve `/docs` only when NODE_ENV is not production.
+- [x] **B0.8 API docs.** `@fastify/swagger` with the Zod type provider. Serve `/docs` only when NODE_ENV is not production.
   AC: `/docs` works in dev and returns 404 in production (test both).
 
 ## B1 Auth and users (branch: phase/B1-auth)

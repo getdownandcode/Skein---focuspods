@@ -1,5 +1,7 @@
 import { PassThrough } from 'node:stream';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { describe, expect, it } from 'vitest';
+import { z } from 'zod';
 import { makeConfig } from '../../test/config.js';
 import { buildApp } from '../app.js';
 
@@ -24,15 +26,13 @@ describe('error responses', () => {
   it('uses the standard shape for a validation error', async () => {
     const app = buildApp({ config: makeConfig(), logger: false });
 
-    app.get(
+    const server = app.withTypeProvider<ZodTypeProvider>();
+
+    server.get(
       '/test/validate',
       {
         schema: {
-          querystring: {
-            type: 'object',
-            required: ['name'],
-            properties: { name: { type: 'string' } },
-          },
+          querystring: z.object({ name: z.string() }),
         },
       },
       async (request) => ({ query: request.query }),

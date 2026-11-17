@@ -1,10 +1,19 @@
 import Fastify, { type FastifyInstance, type FastifyServerOptions } from 'fastify';
+import {
+  serializerCompiler,
+  validatorCompiler,
+  type ZodTypeProvider,
+} from 'fastify-type-provider-zod';
+import { z } from 'zod';
 import type { Config } from './config.js';
 import { createDb } from './db.js';
 import type { PrismaClient } from './generated/prisma/client.js';
 import { getRequestId } from './lib/request-id.js';
-import { registerErrorHandlers } from './plugins/errors.js';
+import { registerDocs } from './plugins/docs.js';
+import { errorResponseSchema, registerErrorHandlers } from './plugins/errors.js';
 import { defaultRateLimit, registerSecurity, type RateLimitOptions } from './plugins/security.js';
+
+const statusSchema = z.object({ status: z.literal('ok') });
 
 export interface BuildAppOptions {
   config: Config;
@@ -57,24 +66,50 @@ export function buildApp(options: BuildAppOptions): FastifyInstance {
     await db.$disconnect();
   });
 
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+
   registerErrorHandlers(app);
   registerSecurity(app, config, options.rateLimit ?? defaultRateLimit);
+  registerDocs(app, config);
 
-  // Routes are registered after the security plugins so their hooks apply.
+  // Routes are registered after the security and docs plugins so their hooks apply.
   app.register(async (instance) => {
-    instance.get('/healthz', async () => ({ status: 'ok' }));
+    const server = instance.withTypeProvider<ZodTypeProvider>();
 
-    instance.get('/readyz', async (request, reply) => {
-      try {
-        await db.$queryRaw`SELECT 1`;
-        return { status: 'ok' };
-      } catch (error) {
-        request.log.error({ err: error }, 'database readiness check failed');
-        return reply
-          .code(503)
-          .send({ error: { code: 'NOT_READY', message: 'Database is unavailable' } });
-      }
-    });
+    server.get(
+      '/healthz',
+      {
+        schema: {
+          tags: ['ops'],
+          summary: 'Liveness probe',
+          response: { 200: statusSchema },
+        },
+      },
+      async () => ({ status: 'ok' as const }),
+    );
+
+    server.get(
+      '/readyz',
+      {
+        schema: {
+          tags: ['ops'],
+          summary: 'Readiness probe',
+          response: { 200: statusSchema, 503: errorResponseSchema },
+        },
+      },
+      async (request, reply) => {
+        try {
+          await db.$queryRaw`SELECT 1`;
+          return { status: 'ok' as const };
+        } catch (error) {
+          request.log.error({ err: error }, 'database readiness check failed');
+          return reply
+            .code(503)
+            .send({ error: { code: 'NOT_READY', message: 'Database is unavailable' } });
+        }
+      },
+    );
   });
 
   return app;
