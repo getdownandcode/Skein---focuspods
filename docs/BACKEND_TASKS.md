@@ -29,7 +29,7 @@ Milestones
 - [x] **B0.5 Errors and logging.** pino logger with a request id per request. One central error handler that returns
   `{ "error": { "code", "message" } }`. Custom 404 handler. No stack traces in production responses.
   AC: tests for 404, a validation error (400), and an unexpected error (500) all match the error shape.
-- [ ] **B0.6 Security baseline.** Register helmet, CORS (allowlist from env), and a global rate limit.
+- [x] **B0.6 Security baseline.** Register helmet, CORS (allowlist from env), and a global rate limit.
   AC: test shows a blocked origin and a 429 after exceeding the limit on a test route.
 - [ ] **B0.7 CI.** GitHub Actions: install, lint, typecheck, test with a Postgres service container.
   AC: workflow file exists and runs the same three commands as local.

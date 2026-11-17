@@ -4,12 +4,15 @@ import { createDb } from './db.js';
 import type { PrismaClient } from './generated/prisma/client.js';
 import { getRequestId } from './lib/request-id.js';
 import { registerErrorHandlers } from './plugins/errors.js';
+import { defaultRateLimit, registerSecurity, type RateLimitOptions } from './plugins/security.js';
 
 export interface BuildAppOptions {
   config: Config;
   /** Injectable so tests can point at a real database, including an unreachable one. */
   db?: PrismaClient;
   logger?: FastifyServerOptions['logger'];
+  /** Tests lower this so the 429 path does not wait a minute. */
+  rateLimit?: RateLimitOptions;
 }
 
 // Tokens and invitation secrets must never reach the logs. Fastify only needs the
@@ -55,19 +58,23 @@ export function buildApp(options: BuildAppOptions): FastifyInstance {
   });
 
   registerErrorHandlers(app);
+  registerSecurity(app, config, options.rateLimit ?? defaultRateLimit);
 
-  app.get('/healthz', async () => ({ status: 'ok' }));
+  // Routes are registered after the security plugins so their hooks apply.
+  app.register(async (instance) => {
+    instance.get('/healthz', async () => ({ status: 'ok' }));
 
-  app.get('/readyz', async (request, reply) => {
-    try {
-      await db.$queryRaw`SELECT 1`;
-      return { status: 'ok' };
-    } catch (error) {
-      request.log.error({ err: error }, 'database readiness check failed');
-      return reply
-        .code(503)
-        .send({ error: { code: 'NOT_READY', message: 'Database is unavailable' } });
-    }
+    instance.get('/readyz', async (request, reply) => {
+      try {
+        await db.$queryRaw`SELECT 1`;
+        return { status: 'ok' };
+      } catch (error) {
+        request.log.error({ err: error }, 'database readiness check failed');
+        return reply
+          .code(503)
+          .send({ error: { code: 'NOT_READY', message: 'Database is unavailable' } });
+      }
+    });
   });
 
   return app;
