@@ -26,7 +26,7 @@ Milestones
 - [x] **B0.4 Prisma and readiness.** Add Prisma, `src/db.ts`, an initial migration, and `GET /readyz` that runs a
   trivial query. Test helper that resets the test DB between test files.
   AC: `/readyz` returns 200 when DB is up and 503 when it is not (test both).
-- [ ] **B0.5 Errors and logging.** pino logger with a request id per request. One central error handler that returns
+- [x] **B0.5 Errors and logging.** pino logger with a request id per request. One central error handler that returns
   `{ "error": { "code", "message" } }`. Custom 404 handler. No stack traces in production responses.
   AC: tests for 404, a validation error (400), and an unexpected error (500) all match the error shape.
 - [ ] **B0.6 Security baseline.** Register helmet, CORS (allowlist from env), and a global rate limit.
