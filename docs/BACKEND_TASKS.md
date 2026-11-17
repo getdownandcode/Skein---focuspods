@@ -23,7 +23,7 @@ Milestones
 - [x] **B0.3 Local database.** `docker-compose.yml` with Postgres 16 for dev and a separate test database.
   npm scripts `db:up`, `db:down`. Document in a short `backend/README.md`.
   AC: `npm run db:up` starts Postgres. README explains setup in under 10 lines.
-- [ ] **B0.4 Prisma and readiness.** Add Prisma, `src/db.ts`, an initial migration, and `GET /readyz` that runs a
+- [x] **B0.4 Prisma and readiness.** Add Prisma, `src/db.ts`, an initial migration, and `GET /readyz` that runs a
   trivial query. Test helper that resets the test DB between test files.
   AC: `/readyz` returns 200 when DB is up and 503 when it is not (test both).
 - [ ] **B0.5 Errors and logging.** pino logger with a request id per request. One central error handler that returns

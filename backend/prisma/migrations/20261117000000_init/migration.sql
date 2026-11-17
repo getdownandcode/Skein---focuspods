@@ -1,0 +1,1 @@
+-- Baseline migration. There are no tables yet; B1 adds the first models.
